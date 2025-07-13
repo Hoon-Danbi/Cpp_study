@@ -1,6 +1,16 @@
 {
     "files.associations": {
         "iostream": "cpp",
-        "vector": "cpp"
+        "vector": "cpp",
+        "xiosbase": "cpp",
+        "xutility": "cpp",
+        "type_traits": "cpp",
+        "deque": "cpp",
+        "exception": "cpp",
+        "memory": "cpp",
+        "queue": "cpp",
+        "tuple": "cpp",
+        "utility": "cpp",
+        "xstring": "cpp"
     }
 }

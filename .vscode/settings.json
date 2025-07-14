@@ -11,6 +11,7 @@
         "queue": "cpp",
         "tuple": "cpp",
         "utility": "cpp",
-        "xstring": "cpp"
+        "xstring": "cpp",
+        "stack": "cpp"
     }
 }

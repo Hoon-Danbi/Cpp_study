@@ -1,3 +1,4 @@
+//https://jungol.co.kr/problem/1006?cursor=OCw1LDg%3D
 #include <iostream>
 #include <vector>
 #include <queue>

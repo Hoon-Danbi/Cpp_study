@@ -5,52 +5,39 @@ using namespace std;
 vector<vector<bool>> visited;
 int res=0;
 int N;
-int drow[8]={-1,1,0,0,-1,-1,1,1};
-int dcol[8]={0,0,-1,1,1,-1,-1,1};
+vector<int> col;
 
 
-
-void mark_visit(int r, int c, bool val) {
-    visited[r][c] = val;
-    for(int dir = 0; dir < 8; dir++) {
-        int nr = r + drow[dir];
-        int nc = c + dcol[dir];
-        while(nr >= 1 && nr <= N && nc >= 1 && nc <= N) {
-            visited[nr][nc] = val;
-            nr += drow[dir];
-            nc += dcol[dir];
+bool Queen_check(int row){
+    for(int i=0;i<row;i++){
+        if(col[i] == col[row] || abs(col[row] - col[i]) == row -i){
+            return false;
         }
     }
+    return true;
 }
 
-void DFS(int cnt) {
-    if(cnt == 4) {  
+void DFS(int cur_col) {
+    if(cur_col == N) {  
         res++;
-        return;
     }
-
-    for(int r = 1; r <= N; r++) {
-        for(int c = 1; c <= N; c++) {
-            if(visited[r][c]) continue;  
-            
-            mark_visit(r, c, true);
-            DFS(cnt + 1);
-            mark_visit(r, c, false);
+    else{
+        for(int i=0;i<N;i++){
+            col[cur_col] = i;
+            if(Queen_check(cur_col)){
+                DFS(cur_col+1);
+            }
         }
     }
+
 }
 
 int main() {
 
     cin>>N;
-    visited.resize(N+1,vector<bool>(N+1,false));
-
+    col.resize(N);
     DFS(0);
     cout<<res;
-    
-    
-    
-    
     return 0;
 }
 

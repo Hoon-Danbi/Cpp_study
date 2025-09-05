@@ -1,0 +1,50 @@
+# -------------------------
+# C / C++ Ignore Template
+# -------------------------
+
+# 컴파일 결과물
+*.out
+*.o
+*.obj
+*.so
+*.a
+*.exe
+*.dll
+
+# Competitive Programming Helper (cph) 등 임시 파일
+*.cph
+
+# Debug / Release 폴더
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+*.dSYM/
+*.stackdump
+
+# CMake 빌드 결과물
+/build/
+[Cc]MakeCache.txt
+[Cc]MakeFiles/
+[Cc]Makefile
+cmake_install.cmake
+install_manifest.txt
+
+# Make 빌드 결과물
+*.d
+
+# IDE별 불필요한 파일
+.vscode/
+.idea/
+*.code-workspace
+
+# 로그 & 임시 파일
+*.log
+*.tmp
+*.swp
+*.swo
+
+# 기타 OS 생성 파일
+.DS_Store
+Thumbs.db
+

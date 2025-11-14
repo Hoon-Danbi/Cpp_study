@@ -2,85 +2,80 @@
 #include <iostream>
 #include <vector>
 #include <queue>
-#include <climits>
 using namespace std;
 
-struct Point {
-    int r, c, d, cost;
-};
+//동 서 남 북
+int dir_drow[5]={0,0,0,1,-1};
+int dir_dcol[5]={0,1,-1,0,0};
 
-int convert_dir(int d) {
-    //  1:동, 2:서, 3:남, 4:북 
-    //→ 0:동, 1:남, 2:서, 3:북
-    if (d == 1) return 0;
-    if (d == 2) return 2;
-    if (d == 3) return 1;
-    if (d == 4) return 3;
+int turn_left(int i){
+    if(i==1) return 4;
+    if(i==2) return 3;
+    if(i==3) return 1;
+    if(i==4) return 2;
+    return -1;
 }
-
-int main() {
-    ios::sync_with_stdio(false); 
-    cin.tie(0);
-
-    int n, m;
-    cin >> n >> m;
-    vector<vector<int>> map(n+2, vector<int>(m+2, 1));
-    for (int i = 1; i <= n; i++)
-        for (int j = 1; j <= m; j++)
-            cin >> map[i][j];
-
-    int sr, sc, sd, er, ec, ed;
-    cin >> sr >> sc >> sd >> er >> ec >> ed;
-
-    sd = convert_dir(sd); 
-    ed = convert_dir(ed);
-
-    // 동 남 서 북
-    int dr[4] = {0, 1, 0, -1};
-    int dc[4] = {1, 0, -1, 0};
-    vector<vector<vector<int>>> dist(n+2, vector<vector<int>>(m+2, vector<int>(4, INT_MAX)));
-
-    queue<Point> q;
-    q.push({sr, sc, sd, 0});
-    dist[sr][sc][sd] = 0;
-
-    while (!q.empty()) {
-        Point cur = q.front(); q.pop();
-
-        // 최소만 도달하게 이전 값과 비교
-        if (cur.cost > dist[cur.r][cur.c][cur.d]) continue;
-
-        // 도착했을때 cost
-        if (cur.r == er && cur.c == ec && cur.d == ed) {
-            cout << cur.cost << '\n';
-            return 0;
-        }
-
-        // 1 2 3칸 직진
-        for (int k = 1; k <= 3; k++) {
-            int nr = cur.r + dr[cur.d]*k;
-            int nc = cur.c + dc[cur.d]*k;
-
-            if (map[nr][nc]==1) break;
-            // 중간 경로에서 이전에 이미 더 작은 값으로 도달했으면 가지 않음-가지치기
-            if (dist[nr][nc][cur.d] <= cur.cost + 1) continue; 
-            dist[nr][nc][cur.d] = cur.cost + 1;
-            q.push({nr, nc, cur.d, cur.cost+1});            
-        }
-
-        // 회전(왼쪽/오른쪽 90도‧180도)
-        for (int nd = 0; nd < 4; nd++) {
-            if (nd == cur.d) continue;
-
-            int turn = abs(cur.d - nd);
-            if (turn == 3) turn = 1; // 3은 방향 변화량이 1이다.
-
-            int ncost = cur.cost + turn;
-            if (dist[cur.r][cur.c][nd] <= ncost) continue;
-            dist[cur.r][cur.c][nd] = ncost;
-            q.push({cur.r, cur.c, nd, ncost});
-            
+int turn_right(int i){
+    if(i==1) return 3;
+    if(i==2) return 4;
+    if(i==3) return 2;
+    if(i==4) return 1; 
+    return -1;
+}
+struct point{
+  int row,col,dir,count;  
+};
+int main(){
+    int n,m;
+    cin>>n>>m;
+    
+    vector<vector<int>> map(n+2,vector<int>(m+2,1));
+    vector<vector<vector<int>>> visited(n+1,vector<vector<int>>(m+1,vector<int>(5,0)));
+    for(int i=1;i<n+1;i++){
+        for(int j=1;j<m+1;j++){
+            cin>>map[i][j];
         }
     }
-    return 0;
+    int start_row,start_col,start_dir;
+    cin>>start_row>>start_col>>start_dir;
+    int end_row,end_col,end_dir;
+    cin>>end_row>>end_col>>end_dir;
+
+    queue<point> q;
+    q.push({start_row,start_col,start_dir,1});
+    visited[start_row][start_col][start_dir]=1;
+    
+    while(!q.empty()){
+        point cur=q.front(); q.pop();
+
+        //1,2,3 앞으로 전진 하는 케이스 
+        for(int i=1;i<4;i++){
+            int next_row=cur.row+i*dir_drow[cur.dir];
+            int next_col=cur.col+i*dir_dcol[cur.dir];
+            
+            if(map[next_row][next_col]==1) break;
+            if(visited[next_row][next_col][cur.dir]!=0) continue;
+            visited[next_row][next_col][cur.dir]= cur.count +1;
+            q.push({next_row,next_col,cur.dir,cur.count+1});
+        }
+
+        // 왼쪽 또는 오른쪽으로 회전하는 케이스 
+        int leftTurn_dir= turn_left(cur.dir);
+        if(leftTurn_dir!=-1 && !visited[cur.row][cur.col][leftTurn_dir]){
+            visited[cur.row][cur.col][leftTurn_dir]=cur.count +1;
+            q.push({cur.row,cur.col,leftTurn_dir,cur.count+1});
+        }
+        
+        int rightTurn_dir= turn_right(cur.dir);
+        if(rightTurn_dir!=-1 && !visited[cur.row][cur.col][rightTurn_dir]){
+            visited[cur.row][cur.col][rightTurn_dir]=cur.count +1;
+            q.push({cur.row,cur.col,rightTurn_dir,cur.count+1});
+        }        
+        
+        
+    }
+    
+    cout<<visited[end_row][end_col][end_dir]-1;
+
+
 }
